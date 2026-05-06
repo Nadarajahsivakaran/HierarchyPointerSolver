@@ -1,0 +1,121 @@
+{
+    "Structure": {
+        "Root Nodes":[
+            {
+                "StructureNodeId": "1",
+                "EntityType": "Company",
+                "Children": [
+                    {
+                        "StructureNodeId": "2",
+                        "EntityType": "Site",
+                        "Children": [
+                            {
+                                "StructureNodeId": "3",
+                                "EntityType": "Department",
+                                "Children": [
+                                    {
+                                        "StructureNodeId": "4",
+                                        "EntityType": "Section",
+                                        "Children": []
+                                    },
+                                    {
+                                        "StructureNodeId": "5",
+                                        "EntityType": "Team",
+                                        "AncestorPointerNodeId": "2",
+                                        "Children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "StructureNodeId": "6",
+                                "EntityType": "Team",
+                                "Children": []
+                            }   
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Hierarchy": {
+        "Root Nodes":[
+            {
+                "HierarchyNodeId": "1",
+                "EntityType": "Company",
+                "Name": "Tensor PLC",
+                "Children": [
+                    {
+                        "HierarchyNodeId": "2",
+                        "EntityType": "Site",
+                        "Name": "Springs",
+                        "Children": [
+                            {
+                                "HierarchyNodeId": "3",
+                                "EntityType": "Department",
+                                "Name": "Software",
+                                "Children": [
+                                    {
+                                        "HierarchyNodeId": "4",
+                                        "EntityType": "Section",
+                                        "Name": "Management",
+                                        "Children": []
+                                    },
+                                    {
+                                        "HierarchyNodeId": "5",
+                                        "EntityType": "Team",
+                                        "Name": "Backend",
+                                        "Children": []
+                                    },
+                                    {
+                                        "HierarchyNodeId": "6",
+                                        "EntityType": "Team",
+                                        "Name": "Frontend",
+                                        "Children": []
+                                    }
+                                ]
+                            },
+                            {
+                                "HierarchyNodeId": "7",
+                                "EntityType": "Department",
+                                "Name": "Testing",
+                                "Children": [
+                                    {
+                                        "HierarchyNodeId": "8",
+                                        "EntityType": "Section",
+                                        "Name": "Management",
+                                        "Children": []
+                                    },
+                                    {
+                                        "HierarchyNodeId": "9",
+                                        "EntityType": "Team",
+                                        "Name": "Hardware",
+                                        "Children": []
+                                    },
+                                    {
+                                        "HierarchyNodeId": "10",
+                                        "EntityType": "Team",
+                                        "Name": "Software",
+                                        "Children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    { 
+                        "HierarchyNodeId": "11",
+                        "EntityType": "Site",
+                        "Name": "Hail Weston",
+                        "Children": [
+                            {
+                                "HierarchyNodeId": "12",
+                                "EntityType": "Team",
+                                "Name": "IT",
+                                "Children": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
