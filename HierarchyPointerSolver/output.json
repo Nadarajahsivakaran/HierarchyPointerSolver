@@ -1,0 +1,20 @@
+{
+  "Nodes": [
+    {
+      "HierarchyNodeId": "5",
+      "PointerHierarchyPointerNodeId": "2"
+    },
+    {
+      "HierarchyNodeId": "6",
+      "PointerHierarchyPointerNodeId": "2"
+    },
+    {
+      "HierarchyNodeId": "9",
+      "PointerHierarchyPointerNodeId": "2"
+    },
+    {
+      "HierarchyNodeId": "10",
+      "PointerHierarchyPointerNodeId": "2"
+    }
+  ]
+}

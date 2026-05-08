@@ -21,5 +21,9 @@ var json =
 			WriteIndented = true
 		});
 
-File.WriteAllText("output.json", json);
-Console.WriteLine("Done 🚀 Output generated!");
+string basePath = AppDomain.CurrentDomain.BaseDirectory;
+string projectPath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));
+string outputPath = Path.Combine(projectPath, "output.json");
+
+File.WriteAllText(outputPath, json);
+Console.WriteLine($"Done 🚀 Output generated at: {outputPath}");
