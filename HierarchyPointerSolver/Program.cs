@@ -21,9 +21,12 @@ var json =
 			WriteIndented = true
 		});
 
+
+string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 string basePath = AppDomain.CurrentDomain.BaseDirectory;
 string projectPath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));
-string outputPath = Path.Combine(projectPath, "output.json");
+string outputFileName = $"output_{timestamp}.json";
+string outputPath = Path.Combine(projectPath, outputFileName);
 
 File.WriteAllText(outputPath, json);
 Console.WriteLine($"Done 🚀 Output generated at: {outputPath}");
