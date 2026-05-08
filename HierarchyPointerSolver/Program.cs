@@ -1,35 +1,25 @@
 ﻿using HierarchyPointerSolver.Infrastructure;
+using HierarchyPointerSolver.Models;
 using HierarchyPointerSolver.Services;
 
+InputRoot input = JsonFileReader.Read("input.json");
 
-class Program
-{
-	static void Main()
-	{
-		var input = JsonFileReader.Read("input.json");
+var hierarchyService = new HierarchyService();
+var resolver = new ResolverService();
 
-		var hierarchyService = new HierarchyService();
-		var structureService = new StructureService();
-		var resolver = new ResolverService();
+List<HierarchyNode> flatHierarchy = hierarchyService.Flatten(input.Hierarchy.RootNodes);
+Dictionary<string, string> parentMap = hierarchyService.BuildParentMap(input.Hierarchy.RootNodes);
+var ruleMap = StructureService.BuildRuleMap(input.Structure.RootNodes);
 
-		// Flatten hierarchy
-		var flatHierarchy = hierarchyService.Flatten(input.Hierarchy.RootNodes);
+List<OutputNode> result = resolver.Resolve(flatHierarchy, ruleMap, parentMap);
 
-		// Build parent map
-		var parentMap = hierarchyService.BuildParentMap(input.Hierarchy.RootNodes);
+var json =
+	System.Text.Json.JsonSerializer.Serialize(
+		new { Nodes = result },
+		new System.Text.Json.JsonSerializerOptions
+		{
+			WriteIndented = true
+		});
 
-		// Build rules
-		var ruleMap = structureService.BuildRuleMap(input.Structure.RootNodes);
-
-		// Resolve
-		var result = resolver.Resolve(flatHierarchy, ruleMap, parentMap);
-
-		// Output
-		var json = System.Text.Json.JsonSerializer.Serialize(new { Nodes = result },
-			new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-
-		File.WriteAllText("output.json", json);
-
-		Console.WriteLine("Done 🚀 Output generated!");
-	}
-}
+File.WriteAllText("output.json", json);
+Console.WriteLine("Done 🚀 Output generated!");

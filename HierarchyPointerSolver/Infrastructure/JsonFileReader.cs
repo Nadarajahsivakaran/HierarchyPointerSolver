@@ -1,24 +1,22 @@
 ﻿using System.Text.Json;
 using HierarchyPointerSolver.Models;
 
-namespace HierarchyPointerSolver.Infrastructure;
-
-public class JsonFileReader
+namespace HierarchyPointerSolver.Infrastructure
 {
-	public static InputRoot Read(string fileName)
+	public class JsonFileReader
 	{
-		var path = Path.Combine(AppContext.BaseDirectory, fileName);
+		public static InputRoot Read(string fileName)
+		{
+			string basePath = AppDomain.CurrentDomain.BaseDirectory;
+			string projectPath = Path.GetFullPath(Path.Combine(basePath, @"..\..\..\"));
+			string path = Path.Combine(projectPath, fileName);
 
-		if (!File.Exists(path))
-			throw new FileNotFoundException($"Missing file: {path}");
+			if (!File.Exists(path))
+				throw new FileNotFoundException($"Missing file: {path}");
 
-		var json = File.ReadAllText(path);
-
-		var result = JsonSerializer.Deserialize<InputRoot>(json);
-
-		if (result == null)
-			throw new Exception("Invalid JSON format");
-
-		return result;
+			string json = File.ReadAllText(path);
+			InputRoot? result = JsonSerializer.Deserialize<InputRoot>(json);
+			return result ?? throw new Exception("Invalid JSON format");
+		}
 	}
 }

@@ -1,54 +1,57 @@
 ﻿using HierarchyPointerSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HierarchyPointerSolver.Services
 {
 	public class ResolverService
 	{
-		private Dictionary<string, string> parentMap;
-		private Dictionary<string, HierarchyNode> nodeMap;
+		private Dictionary<string, string>? parentMap;
+		private Dictionary<string, HierarchyNode>? nodeMap;
 
 		public List<OutputNode> Resolve(
 			List<HierarchyNode> flatNodes,
-			Dictionary<string, string> ruleMap,
+			Dictionary<string, (string TargetType, List<string> PathTypes)> ruleMap,
 			Dictionary<string, string> parentMapInput)
 		{
 			parentMap = parentMapInput;
 			nodeMap = flatNodes.ToDictionary(x => x.HierarchyNodeId);
 
-			var result = new List<OutputNode>();
+			List<OutputNode> result = [];
 
 			foreach (var node in flatNodes)
 			{
 				if (!ruleMap.ContainsKey(node.EntityType))
 					continue;
 
-				var targetType = ruleMap[node.EntityType];
-				var ancestor = FindAncestor(node.HierarchyNodeId, targetType);
+				var (targetType, expectedPathTypes) = ruleMap[node.EntityType];
 
-				if (ancestor != null)
+				string? ancestorId = FindAncestorOfType(node.HierarchyNodeId, targetType);
+				if (ancestorId == null)
+					continue;
+
+				List<string> actualPathTypes = GetPathTypesBetween(ancestorId, node.HierarchyNodeId);
+
+	
+				if (!PathMatches(expectedPathTypes, actualPathTypes))
+					continue;
+
+				result.Add(new OutputNode
 				{
-					result.Add(new OutputNode
-					{
-						HierarchyNodeId = node.HierarchyNodeId,
-						PointerHierarchyPointerNodeId = ancestor
-					});
-				}
+					HierarchyNodeId = node.HierarchyNodeId,
+					PointerHierarchyPointerNodeId = ancestorId
+				});
 			}
 
 			return result;
 		}
 
-		private string FindAncestor(string nodeId, string targetType)
+		private string? FindAncestorOfType(string nodeId, string targetType)
 		{
-			var current = nodeId;
+			string current = nodeId;
 
-			while (parentMap.ContainsKey(current))
+			while (parentMap!.ContainsKey(current))
 			{
-				var parentId = parentMap[current];
-				var parent = nodeMap[parentId];
+				string parentId = parentMap[current];
+				HierarchyNode parent = nodeMap![parentId];
 
 				if (parent.EntityType == targetType)
 					return parent.HierarchyNodeId;
@@ -57,6 +60,41 @@ namespace HierarchyPointerSolver.Services
 			}
 
 			return null;
+		}
+
+		private List<string> GetPathTypesBetween(string ancestorId, string nodeId)
+		{
+			List<string> types = [];
+			string current = nodeId;
+
+			while (parentMap!.ContainsKey(current))
+			{
+				string parentId = parentMap[current];
+				if (parentId == ancestorId)
+					break;
+
+				HierarchyNode parent = nodeMap![parentId];
+				types.Add(parent.EntityType);
+				current = parentId;
+			}
+
+			types.Reverse(); 
+			types.Add(nodeMap![nodeId].EntityType);
+			return types;
+		}
+
+		private static bool PathMatches(List<string> expected, List<string> actual)
+		{
+			if (expected.Count != actual.Count)
+				return false;
+
+			for (int i = 0; i < expected.Count; i++)
+			{
+				if (!string.Equals(expected[i], actual[i], StringComparison.Ordinal))
+					return false;
+			}
+
+			return true;
 		}
 	}
 }

@@ -1,8 +1,5 @@
 ﻿using HierarchyPointerSolver.Interfaces;
 using HierarchyPointerSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HierarchyPointerSolver.Services
 {
@@ -10,13 +7,13 @@ namespace HierarchyPointerSolver.Services
 	{
 		public List<HierarchyNode> Flatten(List<HierarchyNode> nodes)
 		{
-			var result = new List<HierarchyNode>();
+			List<HierarchyNode> result = [];
 
-			foreach (var node in nodes)
+			foreach (HierarchyNode node in nodes)
 			{
 				result.Add(node);
 
-				if (node.Children != null && node.Children.Any())
+				if (node.Children != null && node.Children.Count != 0)
 					result.AddRange(Flatten(node.Children));
 			}
 
@@ -25,16 +22,16 @@ namespace HierarchyPointerSolver.Services
 
 		public Dictionary<string, string> BuildParentMap(List<HierarchyNode> nodes)
 		{
-			var map = new Dictionary<string, string>();
+			Dictionary<string, string> map = [];
 
-			void Traverse(List<HierarchyNode> list, string parentId)
+			void Traverse(List<HierarchyNode> list, string? parentId)
 			{
-				foreach (var node in list)
+				foreach (HierarchyNode node in list)
 				{
 					if (parentId != null)
 						map[node.HierarchyNodeId] = parentId;
 
-					if (node.Children != null && node.Children.Any())
+					if (node.Children != null && node.Children.Count != 0)
 						Traverse(node.Children, node.HierarchyNodeId);
 				}
 			}

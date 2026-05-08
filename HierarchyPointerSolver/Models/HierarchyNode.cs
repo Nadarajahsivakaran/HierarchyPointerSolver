@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HierarchyPointerSolver.Models
+﻿namespace HierarchyPointerSolver.Models
 {
 	public class HierarchyNode
 	{
@@ -10,6 +6,6 @@ namespace HierarchyPointerSolver.Models
 		public string EntityType { get; set; }
 		public string Name { get; set; }
 		public string ParentId { get; set; }
-		public List<HierarchyNode> Children { get; set; } = new();
+		public List<HierarchyNode> Children { get; set; } = [];
 	}
 }

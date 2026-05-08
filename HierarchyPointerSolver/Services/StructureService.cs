@@ -1,53 +1,44 @@
 ﻿using HierarchyPointerSolver.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HierarchyPointerSolver.Services
 {
-
 	public class StructureService
 	{
-		public Dictionary<string, string> BuildRuleMap(List<StructureNode> nodes)
-		{
-			var map = new Dictionary<string, string>();
 
-			void Traverse(List<StructureNode> list)
+		public static Dictionary<string, (string TargetType, List<string> PathTypes)> BuildRuleMap(List<StructureNode> roots)
+		{
+			var map = new Dictionary<string, (string, List<string>)>();
+
+			List<StructureNode> path = [];
+
+			void Traverse(List<StructureNode> nodes)
 			{
-				foreach (var node in list)
+				foreach (var node in nodes)
 				{
+					path.Add(node);
+
 					if (!string.IsNullOrEmpty(node.AncestorPointerNodeId))
 					{
-						var childType = node.EntityType;
-						var parentNode = FindNode(nodes, node.AncestorPointerNodeId);
+						int ancestorIndex = path.FindIndex(p => p.StructureNodeId == node.AncestorPointerNodeId);
+						if (ancestorIndex >= 0)
+						{
+							StructureNode ancestorNode = path[ancestorIndex];
+							string targetType = ancestorNode.EntityType;
 
-						map[childType] = parentNode.EntityType;
+							List<string> pathTypes = [.. path.Skip(ancestorIndex + 1).Select(p => p.EntityType)];
+							map[node.EntityType] = (targetType, pathTypes);
+						}
 					}
 
-					if (node.Children != null && node.Children.Any())
+					if (node.Children != null && node.Children.Count != 0)
 						Traverse(node.Children);
+
+					path.RemoveAt(path.Count - 1);
 				}
 			}
 
-			Traverse(nodes);
+			Traverse(roots);
 			return map;
-		}
-
-		private StructureNode FindNode(List<StructureNode> nodes, string id)
-		{
-			foreach (var node in nodes)
-			{
-				if (node.StructureNodeId == id)
-					return node;
-
-				if (node.Children != null)
-				{
-					var found = FindNode(node.Children, id);
-					if (found != null) return found;
-				}
-			}
-
-			return null;
 		}
 	}
 }
